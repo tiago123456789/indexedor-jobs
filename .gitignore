@@ -1,0 +1,7 @@
+backend/build
+backend/.env
+backend/node_modules
+
+frontend/.env
+frontend/node_modules
+frontend/db.json
