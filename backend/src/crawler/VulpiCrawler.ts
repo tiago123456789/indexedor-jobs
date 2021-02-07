@@ -2,11 +2,14 @@ import CrawlerInterface from "./contract/CrawlerInterface";
 import UuidUtil from "../utils/UuidUtil";
 import moment from "moment";
 import axios from "axios";
+import HttpClient from "../utils/HttpClient";
 
 export default class VulpiCrawler implements CrawlerInterface {
 
+    constructor(private readonly httpClient: HttpClient) {}
+
     async execute(options: { [key: string]: any; }): Promise<any> {
-        const response = await axios.get("https://api.vulpi.com.br/v1/board");
+        const response = await this.httpClient.get("https://api.vulpi.com.br/v1/board");
         // @ts-ignore
         const jobs = response.data.results.map((item: any) => {
             return {

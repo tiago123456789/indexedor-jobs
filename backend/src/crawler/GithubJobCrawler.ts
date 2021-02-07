@@ -2,8 +2,11 @@ import CrawlerInterface from "./contract/CrawlerInterface";
 import axios from "axios";
 import UuidUtil from "../utils/UuidUtil";
 import moment from "moment";
+import Httpclient from "../utils/HttpClient";
 
 export default class GithubJobCrawler implements CrawlerInterface {
+
+    constructor(private readonly httpClient: Httpclient) {}
 
     private extractJob(item: any) {
         let company = (item.title.split("@")[1] || '').trim();
@@ -30,8 +33,8 @@ export default class GithubJobCrawler implements CrawlerInterface {
     }
 
     async execute(options: { [key: string]: any; }): Promise<any> {
-        let frontendbrJobs = await axios.get("https://api.github.com/repos/frontendbr/vagas/issues");
-        let result = await axios.get("https://api.github.com/repos/backend-br/vagas/issues");
+        let frontendbrJobs = await this.httpClient.get("https://api.github.com/repos/frontendbr/vagas/issues");
+        let result = await this.httpClient.get("https://api.github.com/repos/backend-br/vagas/issues");
         result = result.data.map((item: any) => {
             return this.extractJob(item);
         });
