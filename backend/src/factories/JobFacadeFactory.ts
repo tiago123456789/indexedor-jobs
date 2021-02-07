@@ -5,6 +5,8 @@ import JobRepository from "../repositories/JobRepository";
 import FactoryInterface from "./contract/FactoryInterface";
 import logger from "../config/Logger";
 import ProgramathorCrawler from "../crawler/ProgramathorCrawler";
+import CuboJobCrawler from "../crawler/CuboJobCrawler";
+import VulpiCrawler from "../crawler/VulpiCrawler";
 
 export default class JobFacadeFactory implements FactoryInterface<JobFacade> {
 
@@ -14,6 +16,8 @@ export default class JobFacadeFactory implements FactoryInterface<JobFacade> {
             new GithubJobCrawler(),
             new HipterJobCrawler(),
             new ProgramathorCrawler(),
+            new CuboJobCrawler(),
+            new VulpiCrawler(),
             logger
         )
     }

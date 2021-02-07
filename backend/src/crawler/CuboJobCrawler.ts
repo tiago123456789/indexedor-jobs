@@ -4,40 +4,40 @@ import cheerio from "cheerio";
 import UuidUtil from "../utils/UuidUtil";
 import moment from "moment";
 
-export default class ProgramathorCrawler implements CrawlerInterface {
+export default class CuboJobCrawler implements CrawlerInterface {
 
     async execute(options: { [key: string]: any; }): Promise<any> {
         const browser = await puppeteer.launch({
             headless: true,
         });
-
+    
         const page = await browser.newPage();
         await page.setViewport({
             width: 1300,
             height: 700
         });
-        await page.goto(`https://programathor.com.br/jobs`, { waitUntil: 'load', timeout: 0 });
+        await page.goto(`https://cubo.network/jobs/search?area=&level=&startup=&city=&remote=true`, { waitUntil: 'networkidle0', timeout: 0 });
         // @ts-ignore
-        const html = await page.evaluate(() => document.querySelector('*').outerHTML);
+        const html = await page.evaluate(() => document.body.outerHTML);
         const $ = cheerio.load(html);
-        const links: string[] = [];
-        const jobElements = $(".cell-list");
-        const jobs: any[] = [];
+        const jobs: string[] = [];
+        const elementJobs = $(".jobs__item");
 
-        jobElements.each(function () {
+        elementJobs.each(function() {
+            // @ts-ignore
             jobs.push({
                 objectID: UuidUtil.get(),
                 // @ts-ignore
-                title: $(this).find(".cell-list-content > h3").text(),
+                title: $(this).find(".content__info > .title").text(),
                 // @ts-ignore
-                link: `https://programathor.com.br${$(this).find("a").attr("href")}`,
+                link: `https://cubo.network/jobs${$(this).attr("href")}`,
                 // @ts-ignore
-                location: $(this).find(".cell-list-content-icon > span:nth-child(2)").text(),
+                location: "",
                 company: {
                     // @ts-ignore
-                    logo: $(this).find(".logo-list > img").attr("src"),
+                    logo: $(this).find(".cb-card-image > img").attr('src'),
                     // @ts-ignore
-                    name: $(this).find(".cell-list-content-icon > span:first-child").text()
+                    name: $(this).find(".pretitle").text().trim()
                 },
                 extracted_at: moment.utc()
             })
@@ -47,4 +47,4 @@ export default class ProgramathorCrawler implements CrawlerInterface {
     }
 
 
-}
+};

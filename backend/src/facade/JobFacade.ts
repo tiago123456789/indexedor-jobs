@@ -11,6 +11,8 @@ export default class JobFacade {
         private readonly githubCrawler: CrawlerInterface,
         private readonly hiptersCrawler: CrawlerInterface,
         private readonly programathorCrawler: CrawlerInterface,
+        private readonly cuboJobCrawler: CrawlerInterface,
+        private readonly vulpiCrawler: CrawlerInterface,
         private readonly logger: winston.Logger,
     ) {}
 
@@ -19,6 +21,16 @@ export default class JobFacade {
             this.logger.info({ message: `Init extraction jobs`});
             let jobs: Job[] = [];
             
+            this.logger.info({ message: `Init extraction jobs in cubo jobs`});
+            const cuboJobs = await this.cuboJobCrawler.execute({});
+            jobs = jobs.concat(...cuboJobs);
+            this.logger.info({ message: `Finished extraction jobs in cubo jobs`});
+
+            this.logger.info({ message: `Init extraction jobs in vulpi`});
+            const vulpiJobs = await this.vulpiCrawler.execute({});
+            jobs = jobs.concat(...vulpiJobs);
+            this.logger.info({ message: `Finished extraction jobs in vulpi`});
+
             this.logger.info({ message: `Init extraction jobs in github`});
             const githubJobs = await this.githubCrawler.execute({});
             jobs = jobs.concat(...githubJobs);
