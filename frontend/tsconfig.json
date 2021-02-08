@@ -26,7 +26,10 @@
     "types": [
       "@nuxt/types",
       "@nuxtjs/axios",
-      "@types/node"
+      "@types/node",
+      "@nuxtjs/dotenv",
+      "@nuxtjs/toast",
+      "nuxt-i18n"
     ]
   },
   "exclude": [
